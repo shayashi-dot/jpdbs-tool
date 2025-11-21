@@ -8,15 +8,13 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
   <div id="root"></div>
 
-  <script type="text/babel">
+  <script>
     const { useState } = React;
-
     const GapAnalysisTool = () => {
       const [responses, setResponses] = useState({});
       const [activeSection, setActiveSection] = useState('basic');
@@ -394,7 +392,6 @@
           ]
         },
       };
-
       const handleResponseChange = (id, value) => {
         setResponses(prev => ({ ...prev, [id]: value }));
       };
@@ -405,7 +402,6 @@
         let noCount = 0;
         let partialCount = 0;
         let naCount = 0;
-
         Object.values(sections).forEach(section => {
           section.items.forEach(item => {
             if (item.type === 'yesno') {
@@ -418,20 +414,16 @@
             }
           });
         });
-
         const answeredItems = yesCount + noCount + partialCount + naCount;
         const scoreableItems = totalItems - naCount;
         const score = scoreableItems > 0 ? Math.round(((yesCount + partialCount * 0.5) / scoreableItems) * 100) : 0;
-
         return { totalItems, yesCount, noCount, partialCount, naCount, answeredItems, score };
       };
-
       const getComplianceLevel = (score) => {
         if (score >= 80) return { level: '良好', color: 'text-green-600', bgColor: 'bg-green-50' };
         if (score >= 60) return { level: '要改善', color: 'text-yellow-600', bgColor: 'bg-yellow-50' };
         return { level: '要緊急対応', color: 'text-red-600', bgColor: 'bg-red-50' };
       };
-
       const exportData = () => {
         const stats = calculateScore();
         const compliance = getComplianceLevel(stats.score);
@@ -460,7 +452,6 @@
             }
           });
         });
-
         exportText += '\n\n【優先対応項目(法定義務で未対応)】\n';
         let hasPriority = false;
         Object.values(sections).forEach(section => {
@@ -472,7 +463,6 @@
           });
         });
         if (!hasPriority) exportText += 'なし（法定義務は全て対応済み）\n';
-
         const blob = new Blob([exportText], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -484,7 +474,6 @@
 
       const stats = calculateScore();
       const compliance = getComplianceLevel(stats.score);
-
       return React.createElement('div', { className: 'min-h-screen bg-gray-50 p-4' },
         React.createElement('div', { className: 'max-w-6xl mx-auto' },
           React.createElement('div', { className: 'bg-white rounded-lg shadow-sm p-6 mb-6' },
@@ -658,7 +647,6 @@
                       item.requirement?.includes('法定義務')
                     )
                   );
-                  
                   return mandatoryUnmet.length > 0 ?
                     React.createElement('div', { className: 'bg-red-50 border border-red-200 rounded-lg p-4' },
                       React.createElement('p', { className: 'text-sm font-medium text-red-900 mb-2' }, '以下の法定義務項目が未対応です:'),
